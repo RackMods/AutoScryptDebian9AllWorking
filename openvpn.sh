@@ -62,9 +62,9 @@ sudo apt-get update
 }
 
 function BadVPN () {
-wget -O /usr/bin/badvpn-udpgw "https://github.com/radzvpn/openvpndeb/blob/master/badvpn-udpgw?raw=true"
+wget -O /usr/bin/badvpn-udpgw "https://github.com/RackMods/AutoScryptDebian9AllWorking/blob/master/badvpn-udpgw?raw=true"
 if [ "$OS" == "x86_64" ]; then
-  wget -O /usr/bin/badvpn-udpgw "https://github.com/radzvpn/openvpndeb/blob/master/badvpn-udpgw64?raw=true"
+  wget -O /usr/bin/badvpn-udpgw "https://github.com/RackMods/AutoScryptDebian9AllWorking/blob/master/badvpn-udpgw64?raw=true"
 fi
 sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300' /etc/rc.local
 chmod +x /usr/bin/badvpn-udpgw
@@ -228,7 +228,7 @@ socket = r:TCP_NODELAY=1
 client = no
 
 [openssh]
-accept = 444
+accept = 22
 connect = 127.0.0.1:225
 
 [dropbear]
@@ -348,7 +348,7 @@ function installQuestions () {
 	esac
 	echo ""
 	echo "What Privoxy port do you want?"
-	echo "   1) Default: 8118"
+	echo "   1) Default: 8080"
 	echo "   2) Custom"
 	echo "   3) Random [49152-65535]"
 	until [[ "$PORT_PRIVO" =~ ^[1-3]$ ]]; do
@@ -356,11 +356,11 @@ function installQuestions () {
 	done
 	case $PORT_PRIVO in
 		1)
-			PORTS="8118"
+			PORTS="8080"
 		;;
 		2)
 			until [[ "$PORTS" =~ ^[0-9]+$ ]] && [ "$PORTS" -ge 1 ] && [ "$PORTS" -le 65535 ]; do
-				read -rp "Custom port [1-65535]: " -e -i 8118 PORTS
+				read -rp "Custom port [1-65535]: " -e -i 8080 PORTS
 			done
 		;;
 		3)
@@ -389,7 +389,7 @@ function installall () {
 function monitoring () {
 apt-get install -y gcc libgeoip-dev python-virtualenv python-dev geoip-database-extra uwsgi uwsgi-plugin-python geoipupdate
 cd /srv
-git clone https://github.com/radzvpn/openvpn-monitor.git
+git clone https://github.com/RackMods/openvpn-monitor.git
 cd openvpn-monitor
 virtualenv .
 . bin/activate
@@ -397,7 +397,7 @@ pip install -r requirements.txt
 cp openvpn-monitor.conf.example openvpn-monitor.conf
 sed -i "s@host=localhost@host=$IP@g" openvpn-monitor.conf
 sed -i 's@port=5555@port=7505@g' openvpn-monitor.conf
-cd ~/openvpndeb/
+cd ~/AutoScryptDebian9AllWorking/
 cp openvpn-monitor.ini /etc/uwsgi/apps-available/
 ln -s /etc/uwsgi/apps-available/openvpn-monitor.ini /etc/uwsgi/apps-enabled/
 }
@@ -423,10 +423,10 @@ setall
 monitoring
 cp /lib/systemd/system/openvpn\@.service /etc/systemd/system/openvpn\@.service
 mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-cp ~/openvpndeb/nginx.conf /etc/nginx/nginx.conf
+cp ~/AutoScryptDebian9AllWorking/nginx.conf /etc/nginx/nginx.conf
 rm /etc/nginx/conf.d/*.conf
-cp ~/openvpndeb/ocs.conf /etc/nginx/conf.d/
-cp ~/openvpndeb/monitoring.conf /etc/nginx/conf.d/
+cp ~/AutoScryptDebian9AllWorking/ocs.conf /etc/nginx/conf.d/
+cp ~/AutoScryptDebian9AllWorking/monitoring.conf /etc/nginx/conf.d/
 	sed -i 's|LimitNPROC|#LimitNPROC|' /etc/systemd/system/openvpn\@.service
 	sed -i 's|/etc/openvpn/server|/etc/openvpn|' /etc/systemd/system/openvpn\@.service
 	systemctl daemon-reload
