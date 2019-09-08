@@ -9,7 +9,7 @@ else
 fi
 clear
 echo -e ""
-echo -e " == RadzVPN == "
+echo -e " == AcaVPN == "
 echo -e "  Users list "
 echo -e " Username     Expiration"
 echo " "
