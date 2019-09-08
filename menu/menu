@@ -2,7 +2,7 @@
 clear
 
 echo -e ""
-echo -e " == RadzVPN == "
+echo -e " == AcaVPN == "
 echo -e ""
 echo -e "Commands:"
 echo -e "accounts"
